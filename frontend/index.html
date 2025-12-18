@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                <span>Expense Tracker</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="expenses.html" class="nav-link"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li><a href="analytics.html" class="nav-link"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                <li><a href="categories.html" class="nav-link"><i class="fas fa-tags"></i> Categories</a></li>
+                <li><a href="chat.html" class="nav-link"><i class="fas fa-comments"></i> Chat</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <p class="subtitle" id="currentMonthYear"></p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #3B82F6;">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Total Budget</p>
+                    <p class="stat-value" id="totalBudget">₹0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #EF4444;">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Total Spent</p>
+                    <p class="stat-value" id="totalSpent">₹0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #10B981;">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Remaining</p>
+                    <p class="stat-value" id="totalRemaining">₹0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #8B5CF6;">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Categories</p>
+                    <p class="stat-value" id="totalCategories">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Category Breakdown</h2>
+            </div>
+            <div class="card-body">
+                <div id="categoryBreakdown" class="category-list">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/iconMapper.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
+

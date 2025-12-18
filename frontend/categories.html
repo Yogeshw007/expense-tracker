@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Expense Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                <span>Expense Tracker</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="expenses.html" class="nav-link"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li><a href="analytics.html" class="nav-link"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                <li><a href="categories.html" class="nav-link active"><i class="fas fa-tags"></i> Categories</a></li>
+                <li><a href="chat.html" class="nav-link"><i class="fas fa-comments"></i> Chat</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1>Categories</h1>
+                <p class="subtitle">Manage your expense categories and monthly budgets</p>
+            </div>
+            <button class="btn btn-primary" onclick="openCategoryModal()">
+                <i class="fas fa-plus"></i> Add Category
+            </button>
+        </div>
+
+        <!-- Categories Grid -->
+        <div id="categoriesGrid" class="categories-grid">
+            <div class="loading">Loading...</div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Category</h2>
+                <span class="close" onclick="closeCategoryModal()">&times;</span>
+            </div>
+            <form id="categoryForm" onsubmit="saveCategory(event)">
+                <div class="form-group">
+                    <label>Category Name *</label>
+                    <input type="text" id="name" required placeholder="e.g., Groceries">
+                </div>
+                <div class="form-group">
+                    <label>Monthly Limit *</label>
+                    <input type="number" id="monthlyLimit" step="0.01" required placeholder="5000">
+                </div>
+                <div class="form-group">
+                    <label>Icon & Color</label>
+                    <p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.25rem;">
+                        <i class="fas fa-info-circle"></i> Icon and color will be automatically assigned based on category name
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/iconMapper.js"></script>
+    <script src="js/categories.js"></script>
+</body>
+</html>
+

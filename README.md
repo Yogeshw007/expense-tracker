@@ -1,0 +1,201 @@
+# 💰 Expense Tracker - Java Spring Boot Edition
+
+A full-stack expense tracking application built with **Java Spring Boot** backend and **plain HTML/CSS/JavaScript** frontend. Track your monthly expenses, set category budgets, and visualize your spending patterns with beautiful charts.
+
+## ✨ Features
+
+- **📊 Dashboard** - Overview of monthly spending with budget tracking
+- **💳 Expense Management** - Add, edit, and delete expenses with ease
+- **📈 Analytics** - Visual charts showing spending breakdown and trends
+- **🏷️ Category Management** - Create custom categories with monthly limits
+- **⚠️ Budget Alerts** - Visual indicators when you exceed category budgets
+- **📅 Monthly Tracking** - View expenses by month and year
+- **💾 Persistent Data** - H2 database stores all your data locally
+- **🎨 Modern UI** - Clean, responsive design with vanilla JavaScript
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Java 17** or higher
+- **Maven 3.6+**
+- A modern web browser
+
+### Installation & Running
+
+#### Backend (Spring Boot)
+
+```bash
+cd expense-tracker-java/backend
+
+# Build the project
+mvn clean install
+
+# Run the application
+mvn spring-boot:run
+```
+
+The backend server will start on **http://localhost:8080**
+
+#### Frontend (HTML/CSS/JS)
+
+Simply open the frontend files in a web browser:
+
+```bash
+cd expense-tracker-java/frontend
+
+# Option 1: Open directly in browser
+open index.html
+
+# Option 2: Use a simple HTTP server (recommended)
+# Python 3
+python3 -m http.server 3000
+
+# Node.js (if you have http-server installed)
+npx http-server -p 3000
+```
+
+Then open your browser to: **http://localhost:3000**
+
+## 📁 Project Structure
+
+```
+expense-tracker-java/
+├── backend/
+│   ├── src/main/java/com/expensetracker/
+│   │   ├── model/              # Entity classes
+│   │   │   ├── Category.java
+│   │   │   └── Expense.java
+│   │   ├── repository/         # JPA repositories
+│   │   │   ├── CategoryRepository.java
+│   │   │   └── ExpenseRepository.java
+│   │   ├── service/            # Business logic
+│   │   │   ├── CategoryService.java
+│   │   │   ├── ExpenseService.java
+│   │   │   └── AnalyticsService.java
+│   │   ├── controller/         # REST controllers
+│   │   │   ├── CategoryController.java
+│   │   │   ├── ExpenseController.java
+│   │   │   └── AnalyticsController.java
+│   │   ├── dto/                # Data transfer objects
+│   │   ├── config/             # Configuration classes
+│   │   └── ExpenseTrackerApplication.java
+│   ├── src/main/resources/
+│   │   └── application.properties
+│   └── pom.xml
+├── frontend/
+│   ├── css/
+│   │   └── style.css           # All styles
+│   ├── js/
+│   │   ├── config.js           # API configuration
+│   │   ├── utils.js            # Utility functions
+│   │   ├── dashboard.js        # Dashboard logic
+│   │   ├── expenses.js         # Expenses page logic
+│   │   ├── categories.js       # Categories page logic
+│   │   └── analytics.js        # Analytics page logic
+│   ├── index.html              # Dashboard page
+│   ├── expenses.html           # Expenses page
+│   ├── analytics.html          # Analytics page
+│   └── categories.html         # Categories page
+└── README.md
+```
+
+## 🛠️ Technology Stack
+
+### Backend
+- **Java 17** - Programming language
+- **Spring Boot 3.2.0** - Application framework
+- **Spring Data JPA** - Data persistence
+- **H2 Database** - Embedded database
+- **Lombok** - Reduce boilerplate code
+- **Maven** - Build tool
+
+### Frontend
+- **HTML5** - Structure
+- **CSS3** - Styling
+- **Vanilla JavaScript** - Logic and interactivity
+- **Chart.js** - Data visualization
+- **Font Awesome** - Icons
+
+## 📊 API Endpoints
+
+### Categories
+- `GET /api/categories` - Get all categories
+- `GET /api/categories/{id}` - Get category by ID
+- `POST /api/categories` - Create category
+- `PUT /api/categories/{id}` - Update category
+- `DELETE /api/categories/{id}` - Delete category
+
+### Expenses
+- `GET /api/expenses` - Get expenses (with optional filters: month, year, categoryId)
+- `GET /api/expenses/{id}` - Get expense by ID
+- `POST /api/expenses` - Create expense
+- `PUT /api/expenses/{id}` - Update expense
+- `DELETE /api/expenses/{id}` - Delete expense
+
+### Analytics
+- `GET /api/analytics/monthly?month={month}&year={year}` - Monthly summary
+- `GET /api/analytics/breakdown?month={month}&year={year}` - Category breakdown
+- `GET /api/analytics/stats` - Overall statistics
+
+## 🎯 Usage Guide
+
+### 1. Set Up Categories
+
+1. Go to **Categories** page
+2. Click **Add Category**
+3. Enter category name (e.g., "Petrol", "Groceries")
+4. Set monthly budget limit
+5. Choose a color for visual identification
+6. Click **Save**
+
+### 2. Add Expenses
+
+1. Go to **Expenses** page
+2. Click **Add Expense**
+3. Select category
+4. Enter amount and description
+5. Choose date
+6. Click **Save**
+
+### 3. View Analytics
+
+1. Go to **Analytics** page
+2. Select month and year
+3. View pie chart for spending distribution
+4. View bar chart for budget vs actual comparison
+5. Check detailed breakdown table
+
+### 4. Monitor Dashboard
+
+- View current month's budget status
+- See total spent vs remaining budget
+- Track category-wise spending with progress bars
+- Get visual alerts for over-budget categories
+
+## 🗄️ Database
+
+The application uses **H2** in-memory database by default. Data is persisted to a file at `./data/expensetracker.mv.db`.
+
+To access the H2 console:
+1. Navigate to http://localhost:8080/h2-console
+2. Use JDBC URL: `jdbc:h2:file:./data/expensetracker`
+3. Username: `sa`
+4. Password: (leave blank)
+
+## 🔧 Configuration
+
+Edit `backend/src/main/resources/application.properties` to customize:
+- Server port
+- Database settings
+- JPA/Hibernate settings
+- CORS configuration
+
+## 📝 License
+
+MIT
+
+## 👨‍💻 Author
+
+Created with ❤️ for better expense management using Java Spring Boot
+

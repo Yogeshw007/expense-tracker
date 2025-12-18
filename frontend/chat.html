@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Expense Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                <span>Expense Tracker</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="expenses.html" class="nav-link"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li><a href="analytics.html" class="nav-link"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                <li><a href="categories.html" class="nav-link"><i class="fas fa-tags"></i> Categories</a></li>
+                <li><a href="chat.html" class="nav-link active"><i class="fas fa-comments"></i> Chat</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1>Chat Assistant</h1>
+                <p class="subtitle">Add expenses and create categories using natural language</p>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>Hi! I'm your expense assistant. You can:</p>
+                        <ul>
+                            <li>Add expenses: <strong>"spent movie 500"</strong> or <strong>"spent 500 on groceries"</strong></li>
+                            <li>Create categories: <strong>"new category travel 5000"</strong></li>
+                        </ul>
+                        <p>Try it out!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input 
+                    type="text" 
+                    id="chatInput" 
+                    class="chat-input" 
+                    placeholder="Type a message... (e.g., spent movie 500)"
+                    autocomplete="off"
+                >
+                <button id="sendButton" class="chat-send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Examples -->
+        <div class="chat-examples">
+            <h3>Quick Examples:</h3>
+            <div class="example-buttons">
+                <button class="example-btn" onclick="fillExample('spent groceries 1000')">
+                    <i class="fas fa-shopping-cart"></i> Spent on Groceries
+                </button>
+                <button class="example-btn" onclick="fillExample('spent 500 on movie')">
+                    <i class="fas fa-film"></i> Spent on Movie
+                </button>
+                <button class="example-btn" onclick="fillExample('new category travel 5000')">
+                    <i class="fas fa-plus"></i> New Category
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>
+

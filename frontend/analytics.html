@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Expense Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                <span>Expense Tracker</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="expenses.html" class="nav-link"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li><a href="analytics.html" class="nav-link active"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                <li><a href="categories.html" class="nav-link"><i class="fas fa-tags"></i> Categories</a></li>
+                <li><a href="chat.html" class="nav-link"><i class="fas fa-comments"></i> Chat</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <h1>Analytics</h1>
+            <p class="subtitle">Visual breakdown of your spending patterns</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="card">
+            <div class="card-body">
+                <div class="filter-grid-2">
+                    <div class="form-group">
+                        <label>Month</label>
+                        <select id="monthFilter" onchange="loadAnalytics()">
+                            <option value="JANUARY">January</option>
+                            <option value="FEBRUARY">February</option>
+                            <option value="MARCH">March</option>
+                            <option value="APRIL">April</option>
+                            <option value="MAY">May</option>
+                            <option value="JUNE">June</option>
+                            <option value="JULY">July</option>
+                            <option value="AUGUST">August</option>
+                            <option value="SEPTEMBER">September</option>
+                            <option value="OCTOBER">October</option>
+                            <option value="NOVEMBER">November</option>
+                            <option value="DECEMBER">December</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label>
+                        <select id="yearFilter" onchange="loadAnalytics()"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Spending Distribution</h2>
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChart"></canvas>
+                    <div class="chart-total">
+                        <p>Total Spent</p>
+                        <h3 id="totalSpent">₹0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Budget vs Actual</h2>
+                </div>
+                <div class="card-body">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakdown Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Detailed Breakdown</h2>
+            </div>
+            <div class="card-body">
+                <div id="breakdownTable">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/iconMapper.js"></script>
+    <script src="js/analytics.js"></script>
+</body>
+</html>
+
