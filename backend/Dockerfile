@@ -21,8 +21,9 @@ COPY --from=build /app/target/expense-tracker-1.0.0.jar app.jar
 RUN mkdir -p /app/data
 
 # Expose port (Render will set PORT environment variable)
-EXPOSE 8080
+EXPOSE ${PORT:-8080}
 
 # Run the application
-CMD ["java", "-Xmx512m", "-jar", "app.jar"]
+# Use shell form to allow environment variable expansion
+CMD java -Xmx512m -Dserver.port=${PORT:-8080} -jar app.jar
 
