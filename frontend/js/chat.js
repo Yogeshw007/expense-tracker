@@ -24,7 +24,7 @@ async function loadQuickExamples() {
             spentBtn.className = 'example-btn';
             spentBtn.onclick = () => fillExample(`spent ${category.name} 100`);
             spentBtn.innerHTML = `
-                <i class="fas fa-shopping-cart"></i> Spent on ${category.name}
+                <i class="fas fa-shopping-cart"></i> spent ${category.name} 100
             `;
             exampleButtonsContainer.appendChild(spentBtn);
         });
@@ -34,7 +34,7 @@ async function loadQuickExamples() {
         newCategoryBtn.className = 'example-btn';
         newCategoryBtn.onclick = () => fillExample('new category Travel 5000');
         newCategoryBtn.innerHTML = `
-            <i class="fas fa-plus"></i> New Category
+            <i class="fas fa-plus"></i> new category Travel 5000
         `;
         exampleButtonsContainer.appendChild(newCategoryBtn);
 
@@ -44,10 +44,10 @@ async function loadQuickExamples() {
         const exampleButtonsContainer = document.querySelector('.example-buttons');
         exampleButtonsContainer.innerHTML = `
             <button class="example-btn" onclick="fillExample('spent Food 100')">
-                <i class="fas fa-shopping-cart"></i> Spent on Food
+                <i class="fas fa-shopping-cart"></i> spent Food 100
             </button>
             <button class="example-btn" onclick="fillExample('new category Travel 5000')">
-                <i class="fas fa-plus"></i> New Category
+                <i class="fas fa-plus"></i> new category Travel 5000
             </button>
         `;
     }

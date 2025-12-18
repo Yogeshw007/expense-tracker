@@ -1,8 +1,6 @@
 // API Configuration
-// Automatically detect if running locally or in production
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8080/api'
-    : 'https://expense-tracker-backend-bxuv.onrender.com/api';
+// Use deployed backend for all environments
+const API_BASE_URL = 'https://expense-tracker-backend-bxuv.onrender.com/api';
 
 // API Endpoints
 const API = {
