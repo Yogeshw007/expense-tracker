@@ -2,7 +2,7 @@
 // Automatically detect if running locally or in production
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8080/api'
-    : 'https://your-backend-url.onrender.com/api'; // Will be updated after deployment
+    : 'https://expense-tracker-backend-bxuv.onrender.com/api';
 
 // API Endpoints
 const API = {
@@ -32,6 +32,9 @@ const API = {
         monthly: (month, year) => `${API_BASE_URL}/analytics/monthly?month=${month}&year=${year}`,
         breakdown: (month, year) => `${API_BASE_URL}/analytics/breakdown?month=${month}&year=${year}`,
         stats: () => `${API_BASE_URL}/analytics/stats`
+    },
+    chat: {
+        send: () => `${API_BASE_URL}/chat`
     }
 };
 
