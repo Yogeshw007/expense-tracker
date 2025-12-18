@@ -6,7 +6,52 @@ const sendButton = document.getElementById('sendButton');
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     chatInput.focus();
+    loadQuickExamples();
 });
+
+// Load categories and create quick examples
+async function loadQuickExamples() {
+    try {
+        const response = await fetch(API.categories.getAll());
+        const categories = await response.json();
+
+        const exampleButtonsContainer = document.querySelector('.example-buttons');
+        exampleButtonsContainer.innerHTML = '';
+
+        // Add "Spent" examples for each category
+        categories.forEach(category => {
+            const spentBtn = document.createElement('button');
+            spentBtn.className = 'example-btn';
+            spentBtn.onclick = () => fillExample(`spent ${category.name} 100`);
+            spentBtn.innerHTML = `
+                <i class="fas fa-shopping-cart"></i> Spent on ${category.name}
+            `;
+            exampleButtonsContainer.appendChild(spentBtn);
+        });
+
+        // Add "New Category" button at the end
+        const newCategoryBtn = document.createElement('button');
+        newCategoryBtn.className = 'example-btn';
+        newCategoryBtn.onclick = () => fillExample('new category Travel 5000');
+        newCategoryBtn.innerHTML = `
+            <i class="fas fa-plus"></i> New Category
+        `;
+        exampleButtonsContainer.appendChild(newCategoryBtn);
+
+    } catch (error) {
+        console.error('Error loading categories:', error);
+        // Fallback to default examples
+        const exampleButtonsContainer = document.querySelector('.example-buttons');
+        exampleButtonsContainer.innerHTML = `
+            <button class="example-btn" onclick="fillExample('spent Food 100')">
+                <i class="fas fa-shopping-cart"></i> Spent on Food
+            </button>
+            <button class="example-btn" onclick="fillExample('new category Travel 5000')">
+                <i class="fas fa-plus"></i> New Category
+            </button>
+        `;
+    }
+}
 
 // Send message on button click
 sendButton.addEventListener('click', sendMessage);
