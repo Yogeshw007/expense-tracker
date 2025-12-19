@@ -45,14 +45,42 @@ public class DatabaseConfig {
 
                     // Check if port is missing and add default PostgreSQL port
                     String hostAndDb = parts[1];
+                    String host = "";
+                    String dbAndParams = "";
+
                     // If no port specified (no : after hostname before /)
                     if (!hostAndDb.contains(":")) {
                         // Insert :5432 before the /database part
                         int slashIndex = hostAndDb.indexOf("/");
                         if (slashIndex > 0) {
-                            String host = hostAndDb.substring(0, slashIndex);
-                            String dbAndParams = hostAndDb.substring(slashIndex);
+                            host = hostAndDb.substring(0, slashIndex);
+                            dbAndParams = hostAndDb.substring(slashIndex);
                             databaseUrl = "jdbc:postgresql://" + username + ":" + password + "@" + host + ":5432" + dbAndParams;
+                        }
+                    } else {
+                        // Port is already specified
+                        int slashIndex = hostAndDb.indexOf("/");
+                        if (slashIndex > 0) {
+                            host = hostAndDb.substring(0, slashIndex);
+                            dbAndParams = hostAndDb.substring(slashIndex);
+                        }
+                    }
+
+                    // NEON SPECIFIC: Add endpoint ID parameter if host contains neon.tech
+                    if (host.contains("neon.tech")) {
+                        // Extract endpoint ID (first part of hostname before first dot)
+                        String endpointId = host.split("\\.")[0];
+
+                        // Check if endpoint parameter already exists
+                        if (!databaseUrl.contains("options=endpoint")) {
+                            // Add endpoint parameter
+                            if (databaseUrl.contains("?")) {
+                                // Already has query params, append with &
+                                databaseUrl += "&options=endpoint%3D" + endpointId;
+                            } else {
+                                // No query params, add with ?
+                                databaseUrl += "?options=endpoint%3D" + endpointId;
+                            }
                         }
                     }
                 }
