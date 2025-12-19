@@ -59,16 +59,16 @@ function updateStats() {
 // Render category breakdown
 function renderCategoryBreakdown() {
     const container = document.getElementById('categoryBreakdown');
-    
+
     if (monthlySummary.length === 0) {
         container.innerHTML = '<p class="text-center text-muted">No categories found</p>';
         return;
     }
-    
+
     container.innerHTML = monthlySummary.map(category => {
         const percentage = (category.totalSpent / category.monthlyLimit) * 100;
         const isOverBudget = percentage > 100;
-        
+
         const iconClass = category.icon || getCategoryIcon(category.name);
         const iconColor = category.color || getCategoryIconColor(category.name);
         const bgColor = getCategoryBackgroundColor(category.name);
@@ -85,7 +85,7 @@ function renderCategoryBreakdown() {
                     </div>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill ${isOverBudget ? 'over-budget' : ''}" 
+                    <div class="progress-fill ${isOverBudget ? 'over-budget' : ''}"
                          style="width: ${Math.min(percentage, 100)}%"></div>
                 </div>
                 ${isOverBudget ? `
@@ -96,5 +96,59 @@ function renderCategoryBreakdown() {
             </div>
         `;
     }).join('');
+}
+
+// Wake up server function
+async function wakeUpServer() {
+    const statusDiv = document.getElementById('serverStatus');
+    const statusText = document.getElementById('statusText');
+    const wakeUpButton = document.getElementById('wakeUpButton');
+
+    // Show status indicator
+    statusDiv.style.display = 'block';
+    statusText.textContent = 'Waking up server...';
+    wakeUpButton.disabled = true;
+    wakeUpButton.style.opacity = '0.5';
+
+    try {
+        // Ping the server multiple times to ensure it wakes up
+        statusText.textContent = 'Pinging server (1/3)...';
+        await fetch(`${API_BASE_URL}/categories`, { method: 'GET' }).catch(() => {});
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        statusText.textContent = 'Pinging server (2/3)...';
+        await fetch(`${API_BASE_URL}/analytics/stats`, { method: 'GET' }).catch(() => {});
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        statusText.textContent = 'Verifying server status (3/3)...';
+        const response = await fetch(`${API_BASE_URL}/categories`);
+
+        if (response.ok) {
+            statusText.innerHTML = '<i class="fas fa-check-circle"></i> Server is UP!';
+            statusDiv.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
+
+            // Reload dashboard data
+            setTimeout(() => {
+                loadDashboard();
+                statusDiv.style.display = 'none';
+                statusDiv.style.background = 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
+            }, 2000);
+        } else {
+            throw new Error('Server not responding');
+        }
+    } catch (error) {
+        statusText.innerHTML = '<i class="fas fa-exclamation-circle"></i> Server is still starting... Please wait 30 seconds and try again.';
+        statusDiv.style.background = 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)';
+
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+            statusDiv.style.background = 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
+        }, 5000);
+    } finally {
+        wakeUpButton.disabled = false;
+        wakeUpButton.style.opacity = '1';
+    }
 }
 

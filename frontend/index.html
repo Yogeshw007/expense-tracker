@@ -85,10 +85,86 @@
         </div>
     </main>
 
+    <!-- Floating Chat Button -->
+    <button id="chatBotButton" class="chat-bot-button" onclick="openChatModal()">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Wake Up Server Button -->
+    <button id="wakeUpButton" class="wake-up-button" onclick="wakeUpServer()" title="Wake up backend server">
+        <i class="fas fa-power-off"></i>
+    </button>
+
+    <!-- Server Status Indicator -->
+    <div id="serverStatus" class="server-status" style="display: none;">
+        <div class="status-content">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <span id="statusText">Waking up server...</span>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="modal" style="display: none;">
+        <div class="modal-content chat-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-robot"></i> Chat Assistant</h2>
+                <span class="close" onclick="closeChatModal()">&times;</span>
+            </div>
+            <div class="chat-modal-body">
+                <!-- Chat Container -->
+                <div class="chat-container-modal">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message bot-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <p>👋 Hi! I'm your smart expense assistant. I understand natural language!</p>
+                                <p><strong>💰 Add Expenses:</strong></p>
+                                <ul>
+                                    <li>"spent 500 on food"</li>
+                                    <li>"food 250" (quick format)</li>
+                                    <li>"bought groceries for 1000"</li>
+                                </ul>
+                                <p><strong>📁 Create Categories:</strong></p>
+                                <ul>
+                                    <li>"new category Travel 5000"</li>
+                                    <li>"create category Shopping 3000"</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <input
+                            type="text"
+                            id="chatInput"
+                            class="chat-input"
+                            placeholder="Type a message... (e.g., spent food 500)"
+                            autocomplete="off"
+                        >
+                        <button id="sendButton" class="chat-send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Examples -->
+                <div class="chat-examples-modal">
+                    <h4>Quick Examples:</h4>
+                    <div class="example-buttons" id="exampleButtons">
+                        <!-- Examples will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/iconMapper.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/dashboard-chat.js"></script>
 </body>
 </html>
 

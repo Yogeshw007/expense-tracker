@@ -147,14 +147,28 @@ function renderBarChart() {
 // Render breakdown table
 function renderBreakdownTable() {
     const container = document.getElementById('breakdownTable');
-    
+
     if (breakdown.length === 0) {
         container.innerHTML = '<p class="text-center text-muted">No data available</p>';
         return;
     }
-    
+
     const totalSpent = breakdown.reduce((sum, item) => sum + item.totalSpent, 0);
-    
+
+    // Create a map of breakdown data by category ID for easy lookup
+    const breakdownMap = {};
+    breakdown.forEach(item => {
+        breakdownMap[item.id] = item;
+    });
+
+    // Merge breakdown with monthlySummary to get monthly limits
+    const mergedData = monthlySummary
+        .filter(summary => breakdownMap[summary.id]) // Only include categories with expenses
+        .map(summary => ({
+            ...summary,
+            expenseCount: breakdownMap[summary.id].expenseCount
+        }));
+
     container.innerHTML = `
         <table>
             <thead>
@@ -162,14 +176,19 @@ function renderBreakdownTable() {
                     <th>Category</th>
                     <th>Expenses</th>
                     <th>Amount</th>
+                    <th>Budget</th>
+                    <th>% of Limit</th>
                     <th>% of Total</th>
                 </tr>
             </thead>
             <tbody>
-                ${breakdown.map(item => {
+                ${mergedData.map(item => {
                     const iconClass = item.icon || getCategoryIcon(item.name);
                     const iconColor = item.color || getCategoryIconColor(item.name);
                     const bgColor = getCategoryBackgroundColor(item.name);
+                    const percentOfLimit = ((item.totalSpent / item.monthlyLimit) * 100).toFixed(1);
+                    const percentOfTotal = ((item.totalSpent / totalSpent) * 100).toFixed(1);
+                    const isOverBudget = item.totalSpent > item.monthlyLimit;
 
                     return `
                     <tr>
@@ -181,7 +200,11 @@ function renderBreakdownTable() {
                         </td>
                         <td>${item.expenseCount}</td>
                         <td style="font-weight: 500;">${formatCurrency(item.totalSpent)}</td>
-                        <td>${((item.totalSpent / totalSpent) * 100).toFixed(1)}%</td>
+                        <td style="color: #6B7280;">${formatCurrency(item.monthlyLimit)}</td>
+                        <td style="font-weight: 500; color: ${isOverBudget ? '#EF4444' : '#10B981'};">
+                            ${percentOfLimit}%
+                        </td>
+                        <td>${percentOfTotal}%</td>
                     </tr>
                 `;
                 }).join('')}

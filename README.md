@@ -2,6 +2,32 @@
 
 A full-stack expense tracking application built with **Java Spring Boot** backend and **plain HTML/CSS/JavaScript** frontend. Track your monthly expenses, set category budgets, and visualize your spending patterns with beautiful charts.
 
+## 🌐 Live Deployment
+
+### 🔗 Application URLs
+
+- **Frontend (Live App):** Coming Soon (Deploy to Netlify)
+- **Backend API:** https://expense-tracker-backend-bxuv.onrender.com/api
+- **Database:** Neon PostgreSQL (Serverless)
+  - Host: `ep-round-dawn-adg743ow-pooler.us-east-1.aws.neon.tech`
+  - Database: `neondb`
+  - Connection: Secure SSL
+
+### 📡 API Endpoints (Live)
+
+- Categories: https://expense-tracker-backend-bxuv.onrender.com/api/categories
+- Expenses: https://expense-tracker-backend-bxuv.onrender.com/api/expenses
+- Analytics: https://expense-tracker-backend-bxuv.onrender.com/api/analytics/stats
+
+### 🗄️ Database Information
+
+- **Provider:** Neon (Serverless PostgreSQL)
+- **Type:** PostgreSQL 17
+- **Storage:** 512 MB (Free Tier)
+- **Persistence:** ✅ Permanent (Data never expires)
+- **Backups:** Automatic (7-day retention)
+- **Region:** AWS US East 1 (N. Virginia)
+
 ## ✨ Features
 
 - **📊 Dashboard** - Overview of monthly spending with budget tracking
@@ -175,9 +201,27 @@ expense-tracker-java/
 
 ## 🗄️ Database
 
-The application uses **H2** in-memory database by default. Data is persisted to a file at `./data/expensetracker.mv.db`.
+### Production Database (Neon PostgreSQL)
 
-To access the H2 console:
+The deployed application uses **Neon PostgreSQL** - a serverless PostgreSQL database with the following benefits:
+
+- ✅ **Permanent Storage** - Data never expires or gets deleted
+- ✅ **Automatic Backups** - 7-day point-in-time recovery
+- ✅ **Serverless** - Auto-scales and auto-sleeps when inactive
+- ✅ **Free Tier** - 512 MB storage, 191.9 compute hours/month
+- ✅ **High Availability** - Built on AWS infrastructure
+
+**Connection Details:**
+- **Host:** `ep-round-dawn-adg743ow-pooler.us-east-1.aws.neon.tech`
+- **Database:** `neondb`
+- **SSL Mode:** Required
+- **Region:** AWS US East 1
+
+### Local Development Database (H2)
+
+For local development, the application uses **H2** in-memory database. Data is persisted to a file at `./data/expensetracker.mv.db`.
+
+To access the H2 console locally:
 1. Navigate to http://localhost:8080/h2-console
 2. Use JDBC URL: `jdbc:h2:file:./data/expensetracker`
 3. Username: `sa`
@@ -185,11 +229,50 @@ To access the H2 console:
 
 ## 🔧 Configuration
 
+### Environment Variables (Production)
+
+The application uses the following environment variables on Render:
+
+- `DATABASE_URL` - PostgreSQL connection string from Neon
+  ```
+  postgresql://neondb_owner:npg_PKD2I0Qgxhku@ep-round-dawn-adg743ow-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
+  ```
+- `PORT` - Server port (automatically set by Render, defaults to 8080)
+
+### Local Configuration
+
 Edit `backend/src/main/resources/application.properties` to customize:
 - Server port
-- Database settings
+- Database settings (switches between PostgreSQL and H2)
 - JPA/Hibernate settings
 - CORS configuration
+
+## 🚀 Deployment
+
+### Backend (Render)
+
+The backend is deployed on **Render** with the following configuration:
+
+1. **Service:** Web Service
+2. **Build Command:** `mvn clean install`
+3. **Start Command:** `java -jar target/expense-tracker-1.0.0.jar`
+4. **Environment Variables:**
+   - `DATABASE_URL` - Neon PostgreSQL connection string
+5. **Auto-Deploy:** Enabled (deploys on git push)
+
+### Frontend (Netlify - Coming Soon)
+
+The frontend will be deployed on **Netlify** with:
+
+1. **Build Directory:** `expense-tracker-java/frontend`
+2. **Publish Directory:** `.` (root of frontend folder)
+3. **Build Command:** None (static HTML/CSS/JS)
+
+### Database (Neon)
+
+- **Provider:** Neon (https://neon.tech)
+- **Plan:** Free Tier
+- **Features:** Serverless PostgreSQL, Auto-scaling, Auto-backups
 
 ## 📝 License
 
