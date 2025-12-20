@@ -52,12 +52,12 @@ echo ""
 echo "🎬 Adding Entertainment expenses..."
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":10},"amount":500,"description":"Movie tickets","date":"2025-12-12"}' > /dev/null
+  -d '{"category":{"id":4},"amount":500,"description":"Movie tickets","date":"2025-12-12"}' > /dev/null
 echo "✅ Movie tickets - ₹500"
 
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":10},"amount":299,"description":"Amazon Prime subscription","date":"2025-12-01"}' > /dev/null
+  -d '{"category":{"id":4},"amount":299,"description":"Amazon Prime subscription","date":"2025-12-01"}' > /dev/null
 echo "✅ Amazon Prime - ₹299"
 echo ""
 
@@ -65,17 +65,17 @@ echo ""
 echo "🍔 Adding Food expenses..."
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":11},"amount":350,"description":"Lunch at restaurant","date":"2025-12-18"}' > /dev/null
+  -d '{"category":{"id":5},"amount":350,"description":"Lunch at restaurant","date":"2025-12-18"}' > /dev/null
 echo "✅ Restaurant lunch - ₹350"
 
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":11},"amount":450,"description":"Dinner with friends","date":"2025-12-19"}' > /dev/null
+  -d '{"category":{"id":5},"amount":450,"description":"Dinner with friends","date":"2025-12-19"}' > /dev/null
 echo "✅ Dinner - ₹450"
 
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":11},"amount":150,"description":"Coffee and snacks","date":"2025-12-19"}' > /dev/null
+  -d '{"category":{"id":5},"amount":150,"description":"Coffee and snacks","date":"2025-12-19"}' > /dev/null
 echo "✅ Coffee & snacks - ₹150"
 echo ""
 
