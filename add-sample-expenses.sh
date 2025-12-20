@@ -8,22 +8,22 @@ echo "=========================================="
 echo ""
 
 # Category IDs:
-# 7 = Broadband & OTT (₹700)
-# 8 = Fuel (₹2,000)
-# 9 = House Rent (₹12,000)
-# 10 = Entertainment (₹1,000)
-# 11 = Food (₹1,000)
+# 1 = Broadband & OTT (₹700)
+# 2 = Fuel (₹2,000)
+# 3 = House Rent (₹12,000)
+# 4 = Entertainment (₹1,000)
+# 5 = Food (₹1,000)
 
 # Broadband & OTT Expenses
 echo "📡 Adding Broadband & OTT expenses..."
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":7},"amount":199,"description":"Netflix subscription","date":"2025-12-01"}' > /dev/null
+  -d '{"category":{"id":1},"amount":199,"description":"Netflix subscription","date":"2025-12-01"}' > /dev/null
 echo "✅ Netflix subscription - ₹199"
 
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":7},"amount":499,"description":"Broadband monthly bill","date":"2025-12-05"}' > /dev/null
+  -d '{"category":{"id":1},"amount":499,"description":"Broadband monthly bill","date":"2025-12-05"}' > /dev/null
 echo "✅ Broadband bill - ₹499"
 echo ""
 
@@ -31,12 +31,12 @@ echo ""
 echo "⛽ Adding Fuel expenses..."
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":8},"amount":800,"description":"Petrol for bike","date":"2025-12-10"}' > /dev/null
+  -d '{"category":{"id":2},"amount":800,"description":"Petrol for bike","date":"2025-12-10"}' > /dev/null
 echo "✅ Petrol - ₹800"
 
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":8},"amount":750,"description":"Petrol refill","date":"2025-12-15"}' > /dev/null
+  -d '{"category":{"id":2},"amount":750,"description":"Petrol refill","date":"2025-12-15"}' > /dev/null
 echo "✅ Petrol refill - ₹750"
 echo ""
 
@@ -44,7 +44,7 @@ echo ""
 echo "🏠 Adding House Rent..."
 curl -s -X POST "$BACKEND_URL/api/expenses" \
   -H "Content-Type: application/json" \
-  -d '{"category":{"id":9},"amount":12000,"description":"Monthly rent - December","date":"2025-12-01"}' > /dev/null
+  -d '{"category":{"id":3},"amount":12000,"description":"Monthly rent - December","date":"2025-12-01"}' > /dev/null
 echo "✅ Monthly rent - ₹12,000"
 echo ""
 
