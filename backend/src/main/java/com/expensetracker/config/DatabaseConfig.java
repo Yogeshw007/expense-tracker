@@ -82,6 +82,16 @@ public class DatabaseConfig {
                                 databaseUrl += "?options=endpoint%3D" + endpointId;
                             }
                         }
+
+                        // Add SSL mode if not present (required for Neon)
+                        if (!databaseUrl.contains("sslmode=")) {
+                            databaseUrl += "&sslmode=require";
+                        }
+
+                        // WORKAROUND: Add preferQueryMode=simple to avoid SCRAM issues
+                        if (!databaseUrl.contains("preferQueryMode=")) {
+                            databaseUrl += "&preferQueryMode=simple";
+                        }
                     }
                 }
             } catch (Exception e) {
