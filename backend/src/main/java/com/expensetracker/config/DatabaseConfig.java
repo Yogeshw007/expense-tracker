@@ -15,8 +15,12 @@ public class DatabaseConfig {
     public DataSource dataSource() {
         String databaseUrl = System.getenv("DATABASE_URL");
 
+        System.out.println("=== DATABASE CONFIGURATION ===");
+        System.out.println("DATABASE_URL present: " + (databaseUrl != null && !databaseUrl.isEmpty()));
+
         // If DATABASE_URL is set, fix the URL format
         if (databaseUrl != null && !databaseUrl.isEmpty()) {
+            System.out.println("Original DATABASE_URL: " + databaseUrl.replaceAll(":[^:@]+@", ":****@"));
             String username = null;
             String password = null;
 
@@ -88,9 +92,9 @@ public class DatabaseConfig {
                             databaseUrl += "&sslmode=require";
                         }
 
-                        // WORKAROUND: Add preferQueryMode=simple to avoid SCRAM issues
-                        if (!databaseUrl.contains("preferQueryMode=")) {
-                            databaseUrl += "&preferQueryMode=simple";
+                        // Disable channel binding to avoid SCRAM issues
+                        if (!databaseUrl.contains("sslrootcert=")) {
+                            databaseUrl += "&sslrootcert=ALLOW_INVALID";
                         }
                     }
                 }
@@ -110,7 +114,10 @@ public class DatabaseConfig {
             if (username == null) username = "postgres";
             if (password == null) password = "postgres";
 
-            System.out.println("Connecting to database with URL: " + databaseUrl.replaceAll(":[^:@]+@", ":****@"));
+            System.out.println("Final DATABASE_URL: " + databaseUrl.replaceAll(":[^:@]+@", ":****@"));
+            System.out.println("Username: " + username);
+            System.out.println("Password: " + (password != null ? "****" : "null"));
+            System.out.println("==============================");
 
             return DataSourceBuilder.create()
                     .url(databaseUrl)
@@ -119,6 +126,9 @@ public class DatabaseConfig {
                     .driverClassName("org.postgresql.Driver")
                     .build();
         }
+
+        System.out.println("Using default local PostgreSQL configuration");
+        System.out.println("==============================");
 
         // Fallback to default Spring Boot configuration
         return DataSourceBuilder.create()
