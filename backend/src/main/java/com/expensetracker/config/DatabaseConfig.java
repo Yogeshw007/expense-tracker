@@ -35,9 +35,9 @@ public class DatabaseConfig {
 
             // Let the JDBC driver parse the URL and extract credentials itself
             // Do NOT extract username/password - they're already in the URL
+            // Do NOT set driverClassName when URL has embedded credentials
             return DataSourceBuilder.create()
                     .url(databaseUrl)
-                    .driverClassName("org.postgresql.Driver")
                     .build();
         }
 
