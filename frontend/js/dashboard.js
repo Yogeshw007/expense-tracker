@@ -118,7 +118,9 @@ async function loadCategoriesForQuickAdd() {
                 categories.forEach(category => {
                     const option = document.createElement('option');
                     option.value = category.id;
-                    option.textContent = `${category.name} (₹${category.budgetLimit.toLocaleString()})`;
+                    // Use monthlyLimit from API response
+                    const limit = category.monthlyLimit || category.budgetLimit || 0;
+                    option.textContent = `${category.name} (₹${limit.toLocaleString()})`;
                     categorySelect.appendChild(option);
                 });
                 console.log('✅ Categories populated in dropdown:', categories.length);
@@ -260,7 +262,7 @@ if (quickAddForm) {
 
                 const category = {
                     name: categoryName,
-                    budgetLimit: budgetLimit
+                    monthlyLimit: budgetLimit  // API expects monthlyLimit, not budgetLimit
                 };
 
                 await apiCall(API.categories.create(), {
