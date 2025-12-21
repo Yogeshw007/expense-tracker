@@ -105,7 +105,7 @@ let categoriesData = [];
 async function loadCategoriesForQuickAdd() {
     try {
         console.log('Loading categories for Quick Add...');
-        const categories = await apiService.getCategories();
+        const categories = await apiCall(API.categories.getAll());
         categoriesData = categories;
 
         console.log('Categories loaded:', categories.length);
@@ -243,7 +243,10 @@ if (quickAddForm) {
                     category: { id: categoryId }
                 };
 
-                await apiService.createExpense(expense);
+                await apiCall(API.expenses.create(), {
+                    method: 'POST',
+                    body: JSON.stringify(expense)
+                });
                 showNotification('✅ Expense added successfully!', 'success');
 
             } else if (actionType === 'category') {
@@ -260,7 +263,10 @@ if (quickAddForm) {
                     budgetLimit: budgetLimit
                 };
 
-                await apiService.createCategory(category);
+                await apiCall(API.categories.create(), {
+                    method: 'POST',
+                    body: JSON.stringify(category)
+                });
                 showNotification('✅ Category created successfully!', 'success');
 
                 // Reload categories dropdown
@@ -273,7 +279,7 @@ if (quickAddForm) {
             document.getElementById('amountGroup').style.display = 'none';
 
             // Reload dashboard data
-            loadDashboardData();
+            loadDashboard();
 
         } catch (error) {
             console.error('Error:', error);
