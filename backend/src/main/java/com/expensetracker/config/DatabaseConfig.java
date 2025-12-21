@@ -29,6 +29,15 @@ public class DatabaseConfig {
                 databaseUrl = databaseUrl.replace("postgres://", "jdbc:postgresql://");
             }
 
+            // CRITICAL FIX: Add port :5432 if missing
+            // Check if URL has format: jdbc:postgresql://user:pass@host/database (missing :port)
+            // Pattern: @ followed by hostname (no :port) followed by /
+            if (databaseUrl.matches(".*@[^:/@]+/.*")) {
+                // Port is missing - insert :5432 before the /
+                databaseUrl = databaseUrl.replaceFirst("(@[^/]+)/", "$1:5432/");
+                System.out.println("Added missing port :5432 to URL");
+            }
+
             System.out.println("Final DATABASE_URL: " + databaseUrl.replaceAll(":[^:@]+@", ":****@"));
             System.out.println("Using URL-embedded credentials (not extracting separately)");
             System.out.println("==============================");
