@@ -42,6 +42,11 @@ public class DatabaseConfig {
                 String username = credParts[0];
                 String password = credParts.length > 1 ? credParts[1] : "";
 
+                System.out.println("DEBUG - Credentials part: " + credentials);
+                System.out.println("DEBUG - Username: " + username);
+                System.out.println("DEBUG - Password length: " + password.length());
+                System.out.println("DEBUG - Password first 4 chars: " + (password.length() >= 4 ? password.substring(0, 4) : password) + "...");
+
                 // Extract host, port, database (after @)
                 String remaining = urlWithoutPrefix.substring(atIndex + 1);
 
