@@ -18,7 +18,7 @@ public class DatabaseConfig {
         System.out.println("=== DATABASE CONFIGURATION ===");
         System.out.println("DATABASE_URL present: " + (databaseUrl != null && !databaseUrl.isEmpty()));
 
-        // If DATABASE_URL is set, use it directly without parsing
+        // If DATABASE_URL is set, parse it properly
         if (databaseUrl != null && !databaseUrl.isEmpty()) {
             System.out.println("Original DATABASE_URL: " + databaseUrl.replaceAll(":[^:@]+@", ":****@"));
 
@@ -29,22 +29,30 @@ public class DatabaseConfig {
                 databaseUrl = databaseUrl.replace("postgres://", "jdbc:postgresql://");
             }
 
-            // CRITICAL FIX: Add port :5432 if missing
-            // Check if URL has format: jdbc:postgresql://user:pass@host/database (missing :port)
-            // Pattern: @ followed by hostname (no :port) followed by /
-            if (databaseUrl.matches(".*@[^:/@]+/.*")) {
-                // Port is missing - insert :5432 before the /
-                databaseUrl = databaseUrl.replaceFirst("(@[^/]+)/", "$1:5432/");
-                System.out.println("Added missing port :5432 to URL");
+            // CRITICAL FIX: Neon URLs don't include port, we need to add :5432
+            // Format: jdbc:postgresql://user:pass@host/database
+            // Need to insert :5432 between host and /database
+            // Find the position of @ and the next /
+            int atIndex = databaseUrl.lastIndexOf("@");
+            int slashIndex = databaseUrl.indexOf("/", atIndex);
+
+            if (atIndex > 0 && slashIndex > atIndex) {
+                String beforeHost = databaseUrl.substring(0, atIndex + 1);
+                String hostPart = databaseUrl.substring(atIndex + 1, slashIndex);
+                String afterHost = databaseUrl.substring(slashIndex);
+
+                // Check if port is already present in hostPart
+                if (!hostPart.contains(":")) {
+                    // No port found, add :5432
+                    databaseUrl = beforeHost + hostPart + ":5432" + afterHost;
+                    System.out.println("Added missing port :5432 to URL");
+                }
             }
 
             System.out.println("Final DATABASE_URL: " + databaseUrl.replaceAll(":[^:@]+@", ":****@"));
-            System.out.println("Using URL-embedded credentials (not extracting separately)");
             System.out.println("==============================");
 
-            // Let the JDBC driver parse the URL and extract credentials itself
-            // Do NOT extract username/password - they're already in the URL
-            // Do NOT set driverClassName when URL has embedded credentials
+            // Let Spring Boot auto-configure the datasource
             return DataSourceBuilder.create()
                     .url(databaseUrl)
                     .build();
