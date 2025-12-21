@@ -22,12 +22,17 @@ public class ExpenseController {
     public ResponseEntity<List<ExpenseDTO>> getExpenses(
             @RequestParam(required = false) String month,
             @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) Long categoryId) {
-        
-        if (month != null && year != null) {
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String paymentType) {
+
+        if (month != null && year != null && (categoryId != null || paymentType != null)) {
+            return ResponseEntity.ok(expenseService.getExpensesByMonthYearAndFilters(month, year, categoryId, paymentType));
+        } else if (month != null && year != null) {
             return ResponseEntity.ok(expenseService.getExpensesByMonthAndYear(month, year));
         } else if (categoryId != null) {
             return ResponseEntity.ok(expenseService.getExpensesByCategory(categoryId));
+        } else if (paymentType != null) {
+            return ResponseEntity.ok(expenseService.getExpensesByPaymentType(paymentType));
         } else {
             return ResponseEntity.ok(expenseService.getAllExpenses());
         }

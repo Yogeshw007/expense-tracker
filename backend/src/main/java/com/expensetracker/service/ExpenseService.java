@@ -38,6 +38,18 @@ public class ExpenseService {
                 .collect(Collectors.toList());
     }
 
+    public List<ExpenseDTO> getExpensesByPaymentType(String paymentType) {
+        return expenseRepository.findByPaymentType(paymentType).stream()
+                .map(ExpenseDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    public List<ExpenseDTO> getExpensesByMonthYearAndFilters(String month, Integer year, Long categoryId, String paymentType) {
+        return expenseRepository.findByMonthYearAndFilters(month, year, categoryId, paymentType).stream()
+                .map(ExpenseDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     public Optional<ExpenseDTO> getExpenseById(Long id) {
         return expenseRepository.findById(id)
                 .map(ExpenseDTO::fromEntity);

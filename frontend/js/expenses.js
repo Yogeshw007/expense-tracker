@@ -51,8 +51,14 @@ async function loadExpenses() {
     try {
         const month = document.getElementById('monthFilter').value;
         const year = document.getElementById('yearFilter').value;
-        
-        expenses = await apiCall(API.expenses.getAll({ month, year }));
+        const paymentType = document.getElementById('paymentTypeFilter').value;
+
+        const params = { month, year };
+        if (paymentType) {
+            params.paymentType = paymentType;
+        }
+
+        expenses = await apiCall(API.expenses.getAll(params));
         renderExpenses();
         updateTotal();
     } catch (error) {
@@ -77,6 +83,7 @@ function renderExpenses() {
                     <th>Date</th>
                     <th>Category</th>
                     <th>Description</th>
+                    <th>Payment</th>
                     <th>Amount</th>
                     <th style="text-align: right;">Actions</th>
                 </tr>
@@ -87,6 +94,27 @@ function renderExpenses() {
                     const iconColor = expense.color || getCategoryIconColor(expense.categoryName);
                     const bgColor = getCategoryBackgroundColor(expense.categoryName);
 
+                    // Format payment type
+                    let paymentDisplay = '-';
+                    if (expense.paymentType) {
+                        const paymentIcons = {
+                            'CASH': '💵',
+                            'CREDIT_CARD': '💳',
+                            'DEBIT_CARD': '💳',
+                            'UPI': '📱'
+                        };
+                        const paymentNames = {
+                            'CASH': 'Cash',
+                            'CREDIT_CARD': 'Credit',
+                            'DEBIT_CARD': 'Debit',
+                            'UPI': 'UPI'
+                        };
+                        paymentDisplay = `${paymentIcons[expense.paymentType] || ''} ${paymentNames[expense.paymentType] || expense.paymentType}`;
+                        if (expense.cardNumber) {
+                            paymentDisplay += ` (${expense.cardNumber})`;
+                        }
+                    }
+
                     return `
                     <tr>
                         <td>${formatDate(expense.date)}</td>
@@ -96,7 +124,13 @@ function renderExpenses() {
                                 <span>${expense.categoryName}</span>
                             </div>
                         </td>
-                        <td>${expense.description || '-'}</td>
+                        <td>
+                            <div>
+                                <div>${expense.description || '-'}</div>
+                                ${expense.comment ? `<div style="font-size: 0.85em; color: #6B7280; margin-top: 0.25rem;">${expense.comment}</div>` : ''}
+                            </div>
+                        </td>
+                        <td>${paymentDisplay}</td>
                         <td style="font-weight: 500;">${formatCurrency(expense.amount)}</td>
                         <td>
                             <div class="table-actions" style="justify-content: flex-end;">
