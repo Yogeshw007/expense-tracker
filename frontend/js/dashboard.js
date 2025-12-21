@@ -155,6 +155,9 @@ if (actionTypeSelect) {
         const amountGroup = document.getElementById('amountGroup');
         const amountLabel = document.getElementById('amountLabel');
         const amountInput = document.getElementById('amount');
+        const paymentTypeGroup = document.getElementById('paymentTypeGroup');
+        const cardNumberGroup = document.getElementById('cardNumberGroup');
+        const commentGroup = document.getElementById('commentGroup');
         const quickAddBtn = document.getElementById('quickAddBtn');
 
         if (actionType === 'expense') {
@@ -180,6 +183,10 @@ if (actionTypeSelect) {
             amountInput.placeholder = 'Enter amount spent';
             amountInput.required = true;
 
+            // Show payment type, comment fields
+            paymentTypeGroup.style.display = 'block';
+            commentGroup.style.display = 'block';
+
             // Update button
             quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Expense';
 
@@ -199,6 +206,11 @@ if (actionTypeSelect) {
             amountInput.placeholder = 'Enter budget limit';
             amountInput.required = true;
 
+            // Hide payment type, card number, comment fields
+            paymentTypeGroup.style.display = 'none';
+            cardNumberGroup.style.display = 'none';
+            commentGroup.style.display = 'none';
+
             // Update button
             quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Create Category';
 
@@ -208,7 +220,27 @@ if (actionTypeSelect) {
             // Hide all fields
             categoryGroup.style.display = 'none';
             amountGroup.style.display = 'none';
+            paymentTypeGroup.style.display = 'none';
+            cardNumberGroup.style.display = 'none';
+            commentGroup.style.display = 'none';
             quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add';
+        }
+    });
+}
+
+// Handle payment type change to show/hide card number field
+const paymentTypeSelect = document.getElementById('paymentType');
+if (paymentTypeSelect) {
+    paymentTypeSelect.addEventListener('change', function() {
+        const paymentType = this.value;
+        const cardNumberGroup = document.getElementById('cardNumberGroup');
+        const cardNumberInput = document.getElementById('cardNumber');
+
+        if (paymentType === 'CREDIT_CARD' || paymentType === 'DEBIT_CARD') {
+            cardNumberGroup.style.display = 'block';
+        } else {
+            cardNumberGroup.style.display = 'none';
+            cardNumberInput.value = ''; // Clear the value when hidden
         }
     });
 }
@@ -231,9 +263,12 @@ if (quickAddForm) {
                 // Add expense
                 const categoryId = document.getElementById('categorySelect').value;
                 const amount = parseFloat(document.getElementById('amount').value);
+                const paymentType = document.getElementById('paymentType').value;
+                const cardNumber = document.getElementById('cardNumber').value;
+                const comment = document.getElementById('comment').value;
 
                 if (!categoryId || !amount) {
-                    throw new Error('Please fill all fields');
+                    throw new Error('Please fill all required fields');
                 }
 
                 const category = categoriesData.find(c => c.id == categoryId);
@@ -242,7 +277,10 @@ if (quickAddForm) {
                     description: `Quick expense - ${category.name}`,
                     amount: amount,
                     date: new Date().toISOString().split('T')[0],
-                    category: { id: categoryId }
+                    category: { id: categoryId },
+                    paymentType: paymentType || null,
+                    cardNumber: cardNumber || null,
+                    comment: comment || null
                 };
 
                 await apiCall(API.expenses.create(), {
@@ -279,6 +317,9 @@ if (quickAddForm) {
             this.reset();
             document.getElementById('categoryGroup').style.display = 'none';
             document.getElementById('amountGroup').style.display = 'none';
+            document.getElementById('paymentTypeGroup').style.display = 'none';
+            document.getElementById('cardNumberGroup').style.display = 'none';
+            document.getElementById('commentGroup').style.display = 'none';
 
             // Reload dashboard data
             loadDashboard();

@@ -103,6 +103,24 @@
                     <label>Date *</label>
                     <input type="date" id="date" required>
                 </div>
+                <div class="form-group">
+                    <label>Payment Type</label>
+                    <select id="paymentType" onchange="toggleCardNumber()">
+                        <option value="">Select Payment Type</option>
+                        <option value="CASH">💵 Cash</option>
+                        <option value="CREDIT_CARD">💳 Credit Card</option>
+                        <option value="DEBIT_CARD">💳 Debit Card</option>
+                        <option value="UPI">📱 UPI</option>
+                    </select>
+                </div>
+                <div class="form-group" id="cardNumberField" style="display: none;">
+                    <label>Card Number (Last 4 digits)</label>
+                    <input type="text" id="cardNumber" maxlength="4" pattern="[0-9]{4}" placeholder="Optional - Last 4 digits">
+                </div>
+                <div class="form-group">
+                    <label>Comment</label>
+                    <textarea id="comment" rows="3" placeholder="Add a comment (optional)"></textarea>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeExpenseModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save</button>

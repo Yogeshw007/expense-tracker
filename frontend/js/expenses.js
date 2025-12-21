@@ -4,6 +4,20 @@ let expenses = [];
 let categories = [];
 let editingExpenseId = null;
 
+// Toggle card number field based on payment type
+function toggleCardNumber() {
+    const paymentType = document.getElementById('paymentType').value;
+    const cardNumberField = document.getElementById('cardNumberField');
+    const cardNumberInput = document.getElementById('cardNumber');
+
+    if (paymentType === 'CREDIT_CARD' || paymentType === 'DEBIT_CARD') {
+        cardNumberField.style.display = 'block';
+    } else {
+        cardNumberField.style.display = 'none';
+        cardNumberInput.value = '';
+    }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     populateYearFilter('yearFilter');
@@ -114,12 +128,14 @@ function openExpenseModal() {
     document.getElementById('modalTitle').textContent = 'Add Expense';
     document.getElementById('expenseForm').reset();
     document.getElementById('date').valueAsDate = new Date();
+    document.getElementById('cardNumberField').style.display = 'none';
     document.getElementById('expenseModal').classList.add('show');
 }
 
 // Close expense modal
 function closeExpenseModal() {
     document.getElementById('expenseModal').classList.remove('show');
+    document.getElementById('cardNumberField').style.display = 'none';
     editingExpenseId = null;
 }
 
@@ -128,13 +144,22 @@ async function editExpense(id) {
     try {
         const expense = expenses.find(e => e.id === id);
         if (!expense) return;
-        
+
         editingExpenseId = id;
         document.getElementById('modalTitle').textContent = 'Edit Expense';
         document.getElementById('categoryId').value = expense.categoryId;
         document.getElementById('amount').value = expense.amount;
         document.getElementById('description').value = expense.description || '';
         document.getElementById('date').value = expense.date;
+        document.getElementById('paymentType').value = expense.paymentType || '';
+        document.getElementById('cardNumber').value = expense.cardNumber || '';
+        document.getElementById('comment').value = expense.comment || '';
+
+        // Show card number field if payment type is credit/debit card
+        if (expense.paymentType === 'CREDIT_CARD' || expense.paymentType === 'DEBIT_CARD') {
+            document.getElementById('cardNumberField').style.display = 'block';
+        }
+
         document.getElementById('expenseModal').classList.add('show');
     } catch (error) {
         showError('Failed to load expense');
@@ -145,14 +170,17 @@ async function editExpense(id) {
 // Save expense
 async function saveExpense(event) {
     event.preventDefault();
-    
+
     const data = {
         category: { id: parseInt(document.getElementById('categoryId').value) },
         amount: parseFloat(document.getElementById('amount').value),
         description: document.getElementById('description').value,
-        date: document.getElementById('date').value
+        date: document.getElementById('date').value,
+        paymentType: document.getElementById('paymentType').value || null,
+        cardNumber: document.getElementById('cardNumber').value || null,
+        comment: document.getElementById('comment').value || null
     };
-    
+
     try {
         if (editingExpenseId) {
             await apiCall(API.expenses.update(editingExpenseId), {

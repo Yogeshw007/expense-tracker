@@ -21,6 +21,9 @@ public class ExpenseDTO {
     private LocalDate date;
     private String month;
     private Integer year;
+    private String comment;
+    private String paymentType;
+    private String cardNumber;
     private LocalDateTime createdAt;
 
     public static ExpenseDTO fromEntity(Expense expense) {
@@ -34,6 +37,9 @@ public class ExpenseDTO {
         dto.setDate(expense.getDate());
         dto.setMonth(expense.getMonth());
         dto.setYear(expense.getYear());
+        dto.setComment(expense.getComment());
+        dto.setPaymentType(expense.getPaymentType());
+        dto.setCardNumber(expense.getCardNumber());
         dto.setCreatedAt(expense.getCreatedAt());
         return dto;
     }

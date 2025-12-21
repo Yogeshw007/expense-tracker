@@ -57,17 +57,20 @@ public class ExpenseService {
     public ExpenseDTO updateExpense(Long id, Expense expenseDetails) {
         Expense expense = expenseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expense not found with id: " + id));
-        
+
         if (expenseDetails.getCategory() != null && expenseDetails.getCategory().getId() != null) {
             Category category = categoryRepository.findById(expenseDetails.getCategory().getId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             expense.setCategory(category);
         }
-        
+
         expense.setAmount(expenseDetails.getAmount());
         expense.setDescription(expenseDetails.getDescription());
         expense.setDate(expenseDetails.getDate());
-        
+        expense.setComment(expenseDetails.getComment());
+        expense.setPaymentType(expenseDetails.getPaymentType());
+        expense.setCardNumber(expenseDetails.getCardNumber());
+
         Expense updatedExpense = expenseRepository.save(expense);
         return ExpenseDTO.fromEntity(updatedExpense);
     }

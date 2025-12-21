@@ -45,6 +45,15 @@ public class Expense {
     @Column(name = "\"YEAR\"", nullable = false)
     private Integer year;
 
+    @Column(length = 1000)
+    private String comment;
+
+    @Column(name = "payment_type", length = 50)
+    private String paymentType; // CASH, CREDIT_CARD, DEBIT_CARD, UPI
+
+    @Column(name = "card_number", length = 20)
+    private String cardNumber; // Optional, only for credit/debit cards
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
