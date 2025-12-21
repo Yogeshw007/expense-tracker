@@ -29,33 +29,58 @@ public class DatabaseConfig {
                 databaseUrl = databaseUrl.replace("postgres://", "jdbc:postgresql://");
             }
 
-            // CRITICAL FIX: Neon URLs don't include port, we need to add :5432
-            // Format: jdbc:postgresql://user:pass@host/database
-            // Need to insert :5432 between host and /database
-            // Find the position of @ and the next /
-            int atIndex = databaseUrl.lastIndexOf("@");
-            int slashIndex = databaseUrl.indexOf("/", atIndex);
+            // Parse the URL to extract username, password, host, port, database
+            // Format: jdbc:postgresql://username:password@host:port/database?params
+            try {
+                // Remove jdbc:postgresql:// prefix
+                String urlWithoutPrefix = databaseUrl.substring("jdbc:postgresql://".length());
 
-            if (atIndex > 0 && slashIndex > atIndex) {
-                String beforeHost = databaseUrl.substring(0, atIndex + 1);
-                String hostPart = databaseUrl.substring(atIndex + 1, slashIndex);
-                String afterHost = databaseUrl.substring(slashIndex);
+                // Extract credentials (before @)
+                int atIndex = urlWithoutPrefix.indexOf("@");
+                String credentials = urlWithoutPrefix.substring(0, atIndex);
+                String[] credParts = credentials.split(":", 2);
+                String username = credParts[0];
+                String password = credParts.length > 1 ? credParts[1] : "";
 
-                // Check if port is already present in hostPart
-                if (!hostPart.contains(":")) {
-                    // No port found, add :5432
-                    databaseUrl = beforeHost + hostPart + ":5432" + afterHost;
-                    System.out.println("Added missing port :5432 to URL");
+                // Extract host, port, database (after @)
+                String remaining = urlWithoutPrefix.substring(atIndex + 1);
+
+                // Check if port exists
+                String host;
+                String port = "5432"; // default PostgreSQL port
+                int slashIndex = remaining.indexOf("/");
+                String hostPort = remaining.substring(0, slashIndex);
+
+                if (hostPort.contains(":")) {
+                    String[] hostPortParts = hostPort.split(":", 2);
+                    host = hostPortParts[0];
+                    port = hostPortParts[1];
+                } else {
+                    host = hostPort;
                 }
+
+                // Extract database and params
+                String dbAndParams = remaining.substring(slashIndex + 1);
+
+                // Build clean JDBC URL without credentials
+                String cleanUrl = "jdbc:postgresql://" + host + ":" + port + "/" + dbAndParams;
+
+                System.out.println("Parsed - Host: " + host + ", Port: " + port + ", User: " + username);
+                System.out.println("Clean URL: " + cleanUrl);
+                System.out.println("==============================");
+
+                // Build datasource with explicit credentials
+                return DataSourceBuilder.create()
+                        .url(cleanUrl)
+                        .username(username)
+                        .password(password)
+                        .build();
+
+            } catch (Exception e) {
+                System.err.println("ERROR parsing DATABASE_URL: " + e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException("Failed to parse DATABASE_URL", e);
             }
-
-            System.out.println("Final DATABASE_URL: " + databaseUrl.replaceAll(":[^:@]+@", ":****@"));
-            System.out.println("==============================");
-
-            // Let Spring Boot auto-configure the datasource
-            return DataSourceBuilder.create()
-                    .url(databaseUrl)
-                    .build();
         }
 
         System.out.println("Using default local PostgreSQL configuration");
