@@ -104,29 +104,48 @@ let categoriesData = [];
 // Load categories for dropdown
 async function loadCategoriesForQuickAdd() {
     try {
+        console.log('Loading categories for Quick Add...');
         const categories = await apiService.getCategories();
         categoriesData = categories;
+
+        console.log('Categories loaded:', categories.length);
 
         const categorySelect = document.getElementById('categorySelect');
         if (categorySelect) {
             categorySelect.innerHTML = '<option value="">Select Category</option>';
 
-            categories.forEach(category => {
+            if (categories && categories.length > 0) {
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = `${category.name} (₹${category.budgetLimit.toLocaleString()})`;
+                    categorySelect.appendChild(option);
+                });
+                console.log('✅ Categories populated in dropdown:', categories.length);
+            } else {
+                console.warn('⚠️ No categories found');
                 const option = document.createElement('option');
-                option.value = category.id;
-                option.textContent = `${category.name} (₹${category.budgetLimit.toLocaleString()})`;
+                option.value = '';
+                option.textContent = 'No categories available - Create one first';
+                option.disabled = true;
                 categorySelect.appendChild(option);
-            });
+            }
+        } else {
+            console.error('❌ Category select element not found');
         }
     } catch (error) {
-        console.error('Error loading categories:', error);
+        console.error('❌ Error loading categories:', error);
+        const categorySelect = document.getElementById('categorySelect');
+        if (categorySelect) {
+            categorySelect.innerHTML = '<option value="">Error loading categories</option>';
+        }
     }
 }
 
 // Handle action type change
 const actionTypeSelect = document.getElementById('actionType');
 if (actionTypeSelect) {
-    actionTypeSelect.addEventListener('change', function() {
+    actionTypeSelect.addEventListener('change', async function() {
         const actionType = this.value;
         const categoryGroup = document.getElementById('categoryGroup');
         const categorySelect = document.getElementById('categorySelect');
@@ -137,12 +156,21 @@ if (actionTypeSelect) {
         const quickAddBtn = document.getElementById('quickAddBtn');
 
         if (actionType === 'expense') {
+            // Reload categories to ensure fresh data
+            await loadCategoriesForQuickAdd();
+
             // Show category dropdown, hide new category input
             categoryGroup.style.display = 'block';
             categorySelect.style.display = 'block';
             newCategoryName.style.display = 'none';
             categorySelect.required = true;
             newCategoryName.required = false;
+
+            // Update category label to show count
+            const categoryLabel = categoryGroup.querySelector('label');
+            if (categoryLabel && categoriesData.length > 0) {
+                categoryLabel.innerHTML = `<i class="fas fa-tag"></i> Category <span style="color: #fbbf24; font-size: 0.85em;">(${categoriesData.length} available)</span>`;
+            }
 
             // Show amount field
             amountGroup.style.display = 'block';
@@ -152,6 +180,8 @@ if (actionTypeSelect) {
 
             // Update button
             quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Expense';
+
+            console.log('💸 Add Expense mode - Categories:', categoriesData.length);
 
         } else if (actionType === 'category') {
             // Hide category dropdown, show new category input
@@ -169,6 +199,8 @@ if (actionTypeSelect) {
 
             // Update button
             quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Create Category';
+
+            console.log('📁 New Category mode');
 
         } else {
             // Hide all fields
