@@ -7,9 +7,10 @@ This document contains all the live URLs and configuration details for the Expen
 ## 🔗 Live Application URLs
 
 ### Frontend (Web Application)
-- **Status:** 🟡 Pending Deployment
-- **Platform:** Netlify (Recommended)
-- **URL:** Coming Soon
+- **Status:** 🟢 Live
+- **Platform:** Render
+- **URL:** https://expense-tracker-frontend-pgju.onrender.com/index.html
+- **Service Name:** expense-tracker-frontend-pgju
 - **Repository:** https://github.com/Yogeshw007/expense-tracker.git
 - **Deploy Path:** `expense-tracker-java/frontend`
 
@@ -115,23 +116,25 @@ PORT=8080 (auto-set by Render)
 - ⚠️ Cold start takes ~30 seconds
 - ✅ 750 hours/month free compute
 
-### 2. Frontend - Netlify (Pending)
+### 2. Frontend - Render
 
-**Deployment Steps:**
-1. Go to: https://netlify.com
-2. Sign in with GitHub
-3. Click "Add new site" → "Import an existing project"
-4. Select repository: `Yogeshw007/expense-tracker`
-5. Configure:
-   - **Base directory:** `expense-tracker-java/frontend`
-   - **Build command:** (leave empty)
-   - **Publish directory:** `.`
-6. Click "Deploy site"
+**Service Details:**
+- **Service Name:** expense-tracker-frontend-pgju
+- **Service URL:** https://expense-tracker-frontend-pgju.onrender.com/index.html
+- **Dashboard:** https://dashboard.render.com
+- **Plan:** Free Tier (Static Site)
+- **Region:** Oregon (US West)
 
-**Expected URL Format:**
-```
-https://expense-tracker-[random-name].netlify.app
-```
+**Build Configuration:**
+- **Build Command:** (none - static files)
+- **Publish Directory:** `expense-tracker-java/frontend`
+- **Auto-Deploy:** Enabled (on git push to main branch)
+
+**Free Tier Features:**
+- ✅ Always online (no spin-down for static sites)
+- ✅ Global CDN
+- ✅ Automatic HTTPS
+- ✅ Unlimited bandwidth
 
 ### 3. Database - Neon
 
