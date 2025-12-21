@@ -98,6 +98,188 @@ function renderCategoryBreakdown() {
     }).join('');
 }
 
+// Quick Add Form functionality
+let categoriesData = [];
+
+// Load categories for dropdown
+async function loadCategoriesForQuickAdd() {
+    try {
+        const categories = await apiService.getCategories();
+        categoriesData = categories;
+
+        const categorySelect = document.getElementById('categorySelect');
+        if (categorySelect) {
+            categorySelect.innerHTML = '<option value="">Select Category</option>';
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = `${category.name} (₹${category.budgetLimit.toLocaleString()})`;
+                categorySelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
+
+// Handle action type change
+const actionTypeSelect = document.getElementById('actionType');
+if (actionTypeSelect) {
+    actionTypeSelect.addEventListener('change', function() {
+        const actionType = this.value;
+        const categoryGroup = document.getElementById('categoryGroup');
+        const categorySelect = document.getElementById('categorySelect');
+        const newCategoryName = document.getElementById('newCategoryName');
+        const amountGroup = document.getElementById('amountGroup');
+        const amountLabel = document.getElementById('amountLabel');
+        const amountInput = document.getElementById('amount');
+        const quickAddBtn = document.getElementById('quickAddBtn');
+
+        if (actionType === 'expense') {
+            // Show category dropdown, hide new category input
+            categoryGroup.style.display = 'block';
+            categorySelect.style.display = 'block';
+            newCategoryName.style.display = 'none';
+            categorySelect.required = true;
+            newCategoryName.required = false;
+
+            // Show amount field
+            amountGroup.style.display = 'block';
+            amountLabel.textContent = 'Amount Spent';
+            amountInput.placeholder = 'Enter amount spent';
+            amountInput.required = true;
+
+            // Update button
+            quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Expense';
+
+        } else if (actionType === 'category') {
+            // Hide category dropdown, show new category input
+            categoryGroup.style.display = 'block';
+            categorySelect.style.display = 'none';
+            newCategoryName.style.display = 'block';
+            categorySelect.required = false;
+            newCategoryName.required = true;
+
+            // Show amount field
+            amountGroup.style.display = 'block';
+            amountLabel.textContent = 'Budget Limit';
+            amountInput.placeholder = 'Enter budget limit';
+            amountInput.required = true;
+
+            // Update button
+            quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Create Category';
+
+        } else {
+            // Hide all fields
+            categoryGroup.style.display = 'none';
+            amountGroup.style.display = 'none';
+            quickAddBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add';
+        }
+    });
+}
+
+// Handle quick add form submission
+const quickAddForm = document.getElementById('quickAddForm');
+if (quickAddForm) {
+    quickAddForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const actionType = document.getElementById('actionType').value;
+        const quickAddBtn = document.getElementById('quickAddBtn');
+        const originalBtnText = quickAddBtn.innerHTML;
+
+        try {
+            quickAddBtn.disabled = true;
+            quickAddBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            if (actionType === 'expense') {
+                // Add expense
+                const categoryId = document.getElementById('categorySelect').value;
+                const amount = parseFloat(document.getElementById('amount').value);
+
+                if (!categoryId || !amount) {
+                    throw new Error('Please fill all fields');
+                }
+
+                const category = categoriesData.find(c => c.id == categoryId);
+
+                const expense = {
+                    description: `Quick expense - ${category.name}`,
+                    amount: amount,
+                    date: new Date().toISOString().split('T')[0],
+                    category: { id: categoryId }
+                };
+
+                await apiService.createExpense(expense);
+                showNotification('✅ Expense added successfully!', 'success');
+
+            } else if (actionType === 'category') {
+                // Add category
+                const categoryName = document.getElementById('newCategoryName').value;
+                const budgetLimit = parseFloat(document.getElementById('amount').value);
+
+                if (!categoryName || !budgetLimit) {
+                    throw new Error('Please fill all fields');
+                }
+
+                const category = {
+                    name: categoryName,
+                    budgetLimit: budgetLimit
+                };
+
+                await apiService.createCategory(category);
+                showNotification('✅ Category created successfully!', 'success');
+
+                // Reload categories dropdown
+                await loadCategoriesForQuickAdd();
+            }
+
+            // Reset form
+            this.reset();
+            document.getElementById('categoryGroup').style.display = 'none';
+            document.getElementById('amountGroup').style.display = 'none';
+
+            // Reload dashboard data
+            loadDashboardData();
+
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('❌ ' + (error.message || 'Failed to process request'), 'error');
+        } finally {
+            quickAddBtn.disabled = false;
+            quickAddBtn.innerHTML = originalBtnText;
+        }
+    });
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 5rem;
+        right: 2rem;
+        background: ${type === 'success' ? '#10B981' : type === 'error' ? '#EF4444' : '#3B82F6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        font-weight: 600;
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
 // Wake up server function
 async function wakeUpServer() {
     const statusDiv = document.getElementById('serverStatus');
@@ -131,7 +313,7 @@ async function wakeUpServer() {
 
             // Reload dashboard data
             setTimeout(() => {
-                loadDashboard();
+                loadDashboardData();
                 statusDiv.style.display = 'none';
                 statusDiv.style.background = 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
             }, 2000);
@@ -151,4 +333,15 @@ async function wakeUpServer() {
         wakeUpButton.style.opacity = '1';
     }
 }
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadCategoriesForQuickAdd();
+
+    // Hide category and amount fields initially
+    const categoryGroup = document.getElementById('categoryGroup');
+    const amountGroup = document.getElementById('amountGroup');
+    if (categoryGroup) categoryGroup.style.display = 'none';
+    if (amountGroup) amountGroup.style.display = 'none';
+});
 
