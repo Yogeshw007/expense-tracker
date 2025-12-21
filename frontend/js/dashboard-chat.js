@@ -3,20 +3,57 @@ const chatModal = document.getElementById('chatModal');
 const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
+const chatBotButton = document.getElementById('chatBotButton');
 
 // Open chat modal
 function openChatModal() {
     chatModal.style.display = 'block';
+    chatModal.classList.add('show');
     chatInput.focus();
     loadQuickExamples();
+
+    // Hide chat button when modal is open
+    if (chatBotButton) {
+        chatBotButton.style.display = 'none';
+    }
+
+    // Hide notification badge
+    const badge = document.getElementById('chatNotificationBadge');
+    if (badge) {
+        badge.style.display = 'none';
+    }
+
+    // Add welcome message if chat is empty (only bot's initial message)
+    if (chatMessages.children.length === 1) {
+        setTimeout(() => {
+            addMessage("👋 Hello! I'm ready to help you track your expenses. Try saying something like 'spent 500 on food' or 'create category Travel 5000'", 'bot', 'info');
+        }, 300);
+    }
 }
+
+// Show notification badge on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const badge = document.getElementById('chatNotificationBadge');
+    if (badge) {
+        // Show badge after 3 seconds to attract attention
+        setTimeout(() => {
+            badge.style.display = 'flex';
+        }, 3000);
+    }
+});
 
 // Close chat modal
 function closeChatModal() {
     chatModal.style.display = 'none';
+    chatModal.classList.remove('show');
+
+    // Show chat button when modal is closed
+    if (chatBotButton) {
+        chatBotButton.style.display = 'flex';
+    }
 }
 
-// Close modal when clicking outside
+// Close modal when clicking outside (but not on the modal content)
 window.onclick = function(event) {
     if (event.target === chatModal) {
         closeChatModal();
@@ -168,6 +205,8 @@ function addQuickActions() {
 function addMessage(text, sender, type = 'info') {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${sender}-message`;
+    messageDiv.style.opacity = '0';
+    messageDiv.style.transform = 'translateY(10px)';
 
     if (sender === 'bot') {
         messageDiv.innerHTML = `
@@ -190,6 +229,14 @@ function addMessage(text, sender, type = 'info') {
     }
 
     chatMessages.appendChild(messageDiv);
+
+    // Animate message in
+    setTimeout(() => {
+        messageDiv.style.transition = 'all 0.3s ease';
+        messageDiv.style.opacity = '1';
+        messageDiv.style.transform = 'translateY(0)';
+    }, 10);
+
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
